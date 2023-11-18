@@ -6,7 +6,7 @@
 /*   By: faksouss <faksouss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 01:58:54 by faksouss          #+#    #+#             */
-/*   Updated: 2023/11/18 04:21:28 by faksouss         ###   ########.fr       */
+/*   Updated: 2023/11/18 05:31:56 by faksouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct Time{
         this->m = m;
         this->y = y;
     }
+    Time( void ){}
     /*************************************/
     /*         [(=) Operator Overload]         */
     Time &operator=( const Time &date ){
