@@ -6,7 +6,7 @@
 /*   By: faksouss <faksouss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 01:58:54 by faksouss          #+#    #+#             */
-/*   Updated: 2023/11/18 02:38:30 by faksouss         ###   ########.fr       */
+/*   Updated: 2023/11/18 04:21:28 by faksouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ typedef struct Time{
     unsigned int y;//Year
     /*         [Time Constructor]         */
     Time(unsigned int d, unsigned int m, unsigned y){
-        if ((y > 2023 || y < 2008) || (m > 12 || m < 1))
+        if ((y>2023 || y<2008) || (m>12 || m<1))
             throw timeError();
-        if ((m <= 7 && m % 2 == 0 && d > 30) || (m >= 8 && m%2 != 0 && d > 30) || (m == 2 && d > 28 + (y % 4 == 0)))
+        if ((m<=7 && m%2==0 && d>30) || (m>=8 && m%2 != 0 && d>30) || (m==2 && d > 28+(y%4==0)))
             throw timeError();
         this->d = d;
         this->m = m;
@@ -66,7 +66,22 @@ typedef struct Time{
     /*         [Time Out Of Range Error]         */
     class timeError : public std::exception{
         public:
-            virtual const char *what() const throw(){return "Invalid Time";}
+            virtual const char *what() const throw(){return "Error : Invalid Time";}
     };
     /*********************************************/
 } Time;
+
+class BitcoinExchange{
+    private:
+        std::map<Time, float> dataBase;
+        std::map<Time, float> fileToExChange;
+    public:
+        BitcoinExchange( void );
+        BitcoinExchange( const BitcoinExchange &obj );
+        BitcoinExchange &operator=( const BitcoinExchange &obj );
+        ~BitcoinExchange( void );
+        void setDataBase( std::map<Time, float> &dataBase );
+        void setFileToExChange( std::map<Time, float> &fileToExChange );
+        std::map<Time, float> &getDataBase( void ) const;
+        std::map<Time, float> &getFileToExChange( void ) const;
+};
