@@ -6,16 +6,18 @@
 /*   By: faksouss <faksouss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 01:58:54 by faksouss          #+#    #+#             */
-/*   Updated: 2023/11/19 03:46:40 by faksouss         ###   ########.fr       */
+/*   Updated: 2023/11/19 05:31:21 by faksouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <exception>
+#include <fstream>
 #include<iostream>
 #include<string>
 #include<map>
+#include<sstream>
 
 typedef struct Time{
     unsigned int d;//Day
@@ -48,12 +50,14 @@ typedef struct Time{
     /*********************************************/
 } Time;
 
+typedef std::map<Time, float> MAP;
 class BitcoinExchange{
     private:
-        std::map<Time, float> dataBase;
+        MAP dataBase;
     public:
         /*[BitcoinExchange Constructors & Deconstrucot]*/
         BitcoinExchange( void );
+        BitcoinExchange( MAP &dataBase );
         BitcoinExchange( const BitcoinExchange &obj );
         ~BitcoinExchange( void );
         /************************************************/
@@ -61,7 +65,8 @@ class BitcoinExchange{
         BitcoinExchange &operator=( const BitcoinExchange &obj );
         /*******************************************/
         /*        [Geters & Seters]        */
-        void setDataBase( std::map<Time, float> &dataBase );
-        std::map<Time, float> getDataBase( void ) const;
+        void setDataBase( MAP &dataBase );
+        MAP getDataBase( void ) const;
         /***********************************/
+        void exchangeBitcoin( std::ifstream &input );
 };
