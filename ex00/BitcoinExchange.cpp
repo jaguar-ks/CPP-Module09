@@ -6,17 +6,24 @@
 /*   By: faksouss <faksouss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/19 03:25:33 by faksouss          #+#    #+#             */
-/*   Updated: 2023/11/19 11:07:05 by faksouss         ###   ########.fr       */
+/*   Updated: 2023/11/19 13:01:23 by faksouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"BitcoinExchange.hpp"
 #include <_ctype.h>
+#include <algorithm>
 #include <exception>
 #include <fstream>
+#include <ostream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+
+std::ostream &operator<<( std::ostream &out, Time const &t){
+    out << t.y << '-' << t.m << '-' << t.d;
+    return out;
+}
 
 /*******************************[BITCOINEXCHANGE]************************************/
 /*[BitcoinExchange Constructors and Deconstrucot]*/
@@ -63,7 +70,7 @@ bool checkLine(std::string &line, std::string *d, std::string &v, int c){
     if (line.find('|') != std::string::npos && line.find('|',line.find('|')+1) == std::string::npos){
         std::string f[2];
         int p = 0;
-        for(int i = 0; i < line.size(); i++){
+        for(size_t i = 0; i < line.size(); i++){
             p+=(line[i] == '|');
             if (line[i] == '|')
                 continue;
@@ -80,7 +87,7 @@ bool checkLine(std::string &line, std::string *d, std::string &v, int c){
             return true;
         }
         p = 0;
-        for (int i = 0; i < f[0].size(); i++){
+        for (size_t i = 0; i < f[0].size(); i++){
             p+=(f[0][i] == '-');
             if (p>2){
                 std::cerr << "Error : Invalid date format => " << f[0] << std::endl;
@@ -95,7 +102,7 @@ bool checkLine(std::string &line, std::string *d, std::string &v, int c){
             d[p] += f[0][i];
         }
         p=0;
-        for (int i = 0; i < f[1].size(); i++){
+        for (size_t i = 0; i < f[1].size(); i++){
             p+=(f[1][i] == '.');
             if (p>1 || (!isdigit(f[1][i]) && f[1][i] != '.')){
                 std::cerr << "Error : Invalid value => " << f[1] << std::endl;
@@ -116,32 +123,41 @@ void BitcoinExchange::exchangeBitcoin( std::ifstream &input ){
     while (!std::getline(input, line).eof()){
         line.erase(0, line.find_first_not_of(" \t\v\f\r"));
         line.erase(line.find_last_not_of(" \t\v\f\r") + 1);
+        // std::cout << '[' << line << ']' << std::endl;
         for(int i = 0; i < 3; i++)
             d[i].clear();
         v.clear();
         if (line.empty())
             continue;
-        c++;
-        if(!checkLine(line, d, v, c))
+        if(!checkLine(line, d, v, c) || !c){
+            c++;
             continue;
+        }
         try{
-            Time t(atoi(d[0].c_str()), atoi(d[1].c_str()), atoi(d[2].c_str()));
+            const Time t(atoi(d[0].c_str()), atoi(d[1].c_str()), atoi(d[2].c_str()));
             float val = atof(v.c_str());
             if (val > 1000 || val < 0)
                 throw std::out_of_range("Error : Out of range value");
+            std::map<Time, float>::iterator it = this->dataBase.find(t);
+            if (it != this->dataBase.end())
+                std::cout << t << " => " << val << " = " << it->second * val << std::endl;
+            else
+                std::cout << "Mal9inach abatal" << std::endl;
         }
         catch(std::exception &e){
             int y = atoi(d[0].c_str()), m = atoi(d[1].c_str()), j = atoi(d[2].c_str());
-            float f = atof(v.c_str());
             std::cerr << e.what();
             if (((y>2023 || y<2008)||(m>12 || m<1)|| j<1)||(m<=7 && j>30+(m%2!=0))||(m>=8 && j>30+(m%2==0))||(m==2 && j>28+(y%4==0)))
                 std::cerr << " => " << d[0] << ' ' << d[1] << ' ' << d[2] << std::endl;
             else
-                std::cerr << " => " << f << std::endl;
+                std::cerr << " => " << v << std::endl;
         }
+        c++;
     }
     if (!c)
         std::cerr << "Error : You used an empty file" << std::endl;
+    // std::cout << c << std::endl; 
+    input.close();
 }
 
 /************************************************************************************/
@@ -150,7 +166,8 @@ void BitcoinExchange::exchangeBitcoin( std::ifstream &input ){
 
 /*************************************[TIME]*****************************************/
 /*         [Time Constructors]         */
-Time::Time(unsigned int d, unsigned int m, unsigned y){
+Time::Time(unsigned int y, unsigned int m, unsigned d){
+    // std::cout << '|' << y  << '|' << m << '|' << d << '|' << std::endl;
     if (((y>2023 || y<2008)||(m>12 || m<1)|| d < 1)||((m<=7 && d>30+(m%2!=0))||(m>=8 && d>30+(m%2==0))||(m==2 && d > 28+(y%4==0))))
         throw timeError();
     this->d = d;
@@ -171,27 +188,27 @@ Time &Time::operator=( const Time &date ){
 
 
 /*         [Comperation Operators Overload]         */
-bool Time::operator>( const Time &a ){
+bool Time::operator>( const Time &a ) const {
     return (this->y>a.y) || (this->y==a.y && this->m>a.m) || (this->y==a.y && this->m==a.m && this->d>a.d);
 }
 
-bool Time::operator<( const Time &a ){
+bool Time::operator<( const Time &a ) const {
     return (this->y<a.y) || (this->y==a.y && this->m<a.m) || (this->y==a.y && this->m==a.m && this->d<a.d);
 }
 
-bool Time::operator>=( const Time &a ){
+bool Time::operator>=( const Time &a ) const {
     return (this->y>=a.y) || (this->y==a.y && this->m>=a.m) || (this->y==a.y && this->m==a.m && this->d>=a.d);
 }
 
-bool Time::operator<=( const Time &a ){
+bool Time::operator<=( const Time &a ) const {
     return (this->y<=a.y) || (this->y==a.y && this->m<=a.m) || (this->y==a.y && this->m==a.m && this->d<=a.d);
 }
 
-bool Time::operator==( const Time &a ){
+bool Time::operator==( const Time &a ) const {
     return this->y == a.y && this->m == a.m && this->d == a.d;
 }
 
-bool Time::operator!=( const Time &a ){
+bool Time::operator!=( const Time &a ) const {
     return !(this->y == a.y && this->m == a.m && this->d == a.d);
 }
 /**************************************************/

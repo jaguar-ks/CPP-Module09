@@ -6,7 +6,7 @@
 /*   By: faksouss <faksouss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 04:21:48 by faksouss          #+#    #+#             */
-/*   Updated: 2023/11/19 06:21:59 by faksouss         ###   ########.fr       */
+/*   Updated: 2023/11/19 12:42:34 by faksouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,11 @@
 std::pair<Time, float> getDataPair( std::string &line ){
     try {
         std::string t[4];
-        t[0] = {line[0],line[1],line[2],line[3]};
-        t[1] = {line[5], line[6]};
-        t[2] = {line[8], line[9]};
+        t[0].assign(line,0,4);
+        t[1].assign(line,5,2);
+        t[2].assign(line,8,2);
+        t[3].assign(line,11,line.size()-11);
         Time tm(atoi(t[0].c_str()), atoi(t[1].c_str()), atoi(t[2].c_str()));
-        for (int i = 11; i < line.size(); i++)
-            t[3] += line[i];
         float val = atof(t[3].c_str());
         if (val < 0)
             throw std::out_of_range("Error : NegativeValue found");
@@ -46,12 +45,15 @@ MAP readDataFile( std::ifstream &file ){
 
     while (!std::getline(file, line).eof()){
         if (line == "date,exchange_rate"){
-            if (std::getline(file, line).eof())
-                std::cerr << "Error : Empty file" << std::endl; exit(1);
+            if (std::getline(file, line).eof()){
+                std::cerr << "Error : Empty file" << std::endl;
+                exit(1);
+            }
             continue;
         }
         Data.insert(getDataPair(line));
     }
+    file.close();
     return Data;
 }
 
@@ -64,7 +66,8 @@ int main(int ac, char **av){
             return 1;
         }
         MAP Data = readDataFile(dataBase);
-        BitcoinExchange ex(Data);      
+        BitcoinExchange ex(Data);
+        ex.exchangeBitcoin(exChange);
     }
     else{
         std::cerr << "Error : "; 
