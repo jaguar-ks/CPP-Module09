@@ -6,7 +6,7 @@
 /*   By: faksouss <faksouss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/19 03:25:33 by faksouss          #+#    #+#             */
-/*   Updated: 2023/11/19 10:56:01 by faksouss         ###   ########.fr       */
+/*   Updated: 2023/11/19 11:07:05 by faksouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,9 @@ bool checkLine(std::string &line, std::string *d, std::string &v, int c){
                 continue;
             f[p] += line[i];
         }
-        f[0].erase(f[0].find_last_not_of(" \t\v\t\f\r"));
-        f[1].erase(f[1].find_last_not_of(" \t\v\t\f\r"));
+        f[0].erase(f[0].find_last_not_of(" \t\v\t\f\r")+1);
+        f[1].erase(f[1].find_last_not_of(" \t\v\t\f\r")+1);
+        f[1].erase(0,f[1].find_first_not_of(" \t\v\t\f\r"));
         if (!c){
             if(f[0] != "date" || f[1] != "value"){
                 std::cerr << "Error : Invalid begging of input file" << std::endl;
