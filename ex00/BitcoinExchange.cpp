@@ -6,7 +6,7 @@
 /*   By: faksouss <faksouss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/19 03:25:33 by faksouss          #+#    #+#             */
-/*   Updated: 2023/11/20 04:25:41 by faksouss         ###   ########.fr       */
+/*   Updated: 2023/11/20 10:04:44 by faksouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,10 @@ void BitcoinExchange::exchangeBitcoin( std::ifstream &input ){
                 it = this->dataBase.lower_bound(t);
                 if (it != this->dataBase.begin())
                     it--;
+                if (it == this->dataBase.begin() && t < it->first){
+                    std::cerr << "Error : There is no Data for this date: " << t << std::endl;
+                    continue;
+                }
                 std::cout << t << " => " << val << " = " << it->second * val << std::endl;
             }
         }
