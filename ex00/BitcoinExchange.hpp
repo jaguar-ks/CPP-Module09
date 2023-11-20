@@ -6,7 +6,7 @@
 /*   By: faksouss <faksouss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 01:58:54 by faksouss          #+#    #+#             */
-/*   Updated: 2023/11/19 12:41:32 by faksouss         ###   ########.fr       */
+/*   Updated: 2023/11/20 04:07:43 by faksouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 #include<string>
 #include<map>
 #include<sstream>
+
+/*************************************[TIME]*****************************************/
 
 typedef struct Time{
     unsigned int d;//Day
@@ -50,14 +52,14 @@ typedef struct Time{
     };
     /*********************************************/
 } Time;
-
-/*           [Insertion Operator Overload]           */
-std::ostream &operator<<( std::ostream &out, Time &tm );
+/*************************************************************************************/
 
 typedef std::map<Time, float> MAP;
+
+/*******************************[BITCOINEXCHANGE]************************************/
 class BitcoinExchange{
     private:
-        MAP dataBase;
+        MAP dataBase;//DataBase
     public:
         /*[BitcoinExchange Constructors & Deconstrucot]*/
         BitcoinExchange( void );
@@ -72,5 +74,13 @@ class BitcoinExchange{
         void setDataBase( MAP &dataBase );
         MAP getDataBase( void ) const;
         /***********************************/
+        /*     [Reading & Exchanging Bitcoin Value]    */
         void exchangeBitcoin( std::ifstream &input );
+        /***********************************************/
 };
+/************************************************************************************/
+
+
+/*     [Overload Of the insertion Operator(<<)]      */
+std::ostream &operator<<( std::ostream &out, Time &tm );
+/*****************************************************/

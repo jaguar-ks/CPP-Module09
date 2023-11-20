@@ -6,7 +6,7 @@
 /*   By: faksouss <faksouss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 04:21:48 by faksouss          #+#    #+#             */
-/*   Updated: 2023/11/19 12:42:34 by faksouss         ###   ########.fr       */
+/*   Updated: 2023/11/20 04:16:47 by faksouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ MAP readDataFile( std::ifstream &file ){
                 std::cerr << "Error : Empty file" << std::endl;
                 exit(1);
             }
-            continue;
         }
         Data.insert(getDataPair(line));
     }
