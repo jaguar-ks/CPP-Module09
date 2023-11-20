@@ -35,4 +35,5 @@
 tst.*
 test.*
 
+.DS_Store
 .vscode
