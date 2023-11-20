@@ -6,7 +6,7 @@
 /*   By: faksouss <faksouss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/19 03:25:33 by faksouss          #+#    #+#             */
-/*   Updated: 2023/11/19 13:01:23 by faksouss         ###   ########.fr       */
+/*   Updated: 2023/11/20 03:43:44 by faksouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,8 +141,13 @@ void BitcoinExchange::exchangeBitcoin( std::ifstream &input ){
             std::map<Time, float>::iterator it = this->dataBase.find(t);
             if (it != this->dataBase.end())
                 std::cout << t << " => " << val << " = " << it->second * val << std::endl;
-            else
-                std::cout << "Mal9inach abatal" << std::endl;
+            else{
+                it = this->dataBase.lower_bound(t);
+                if (it != this->dataBase.begin())
+                    it--;
+                std::cout << t << " => " << val << " = " << it->second * val << std::endl;
+            }
+                // std::cout << "Mal9inach abatal" << std::endl;
         }
         catch(std::exception &e){
             int y = atoi(d[0].c_str()), m = atoi(d[1].c_str()), j = atoi(d[2].c_str());
