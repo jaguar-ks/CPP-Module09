@@ -6,7 +6,7 @@
 /*   By: faksouss <faksouss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 01:58:54 by faksouss          #+#    #+#             */
-/*   Updated: 2023/11/20 04:07:43 by faksouss         ###   ########.fr       */
+/*   Updated: 2023/11/21 04:47:41 by faksouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,3 +84,26 @@ class BitcoinExchange{
 /*     [Overload Of the insertion Operator(<<)]      */
 std::ostream &operator<<( std::ostream &out, Time &tm );
 /*****************************************************/
+
+/*         [Helper Functions]         */
+/*
+    Read the database file line by line checking
+    if it is valid and storing it in a map to search
+    in it later
+*/
+MAP readDataFile( std::ifstream &file );
+
+/*
+    Take a line checking if it is valide converting it
+    to the needed type to stor it in a pair to add it to
+    the data base map
+*/
+std::pair<Time, float> getDataPair( std::string &line );
+
+/*
+    Helper function to parss the line checking if the format is valid
+    and filling the needed data to work with and returning true otherwise
+    returns false and printing an error discribing what happend
+*/
+bool checkLine(std::string &line, std::string *d, std::string &v, int c);
+/**************************************/
