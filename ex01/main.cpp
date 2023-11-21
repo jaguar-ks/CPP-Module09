@@ -6,30 +6,12 @@
 /*   By: faksouss <faksouss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 09:05:43 by faksouss          #+#    #+#             */
-/*   Updated: 2023/11/20 09:49:34 by faksouss         ###   ########.fr       */
+/*   Updated: 2023/11/21 04:39:11 by faksouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <_ctype.h>
-#include<string>
-#include<iostream>
-#include<stack>
-
-int doop(int a, int b, char op){
-    if (op == '*')
-        return a*b;
-    else if (op == '/'){
-        if (!b){
-            std::cerr << "Error : Can't devide by 0" << std::endl;
-            exit(1);
-        }
-        return a/b;
-    }
-    else if (op == '-')
-        return a-b;
-    else
-        return a+b;
-}
+#include"RPN.hpp"
+#include <sys/_types/_size_t.h>
 
 int main(int ac, char **av){
     if (ac == 2){
@@ -39,7 +21,7 @@ int main(int ac, char **av){
             std::cerr << "Error : Empty argument" << std::endl;
             return 1;
         }
-        for (int i = 0; i < s.size(); i++){
+        for (size_t i = 0; i < s.size(); i++){
             if (s[i] == ' ')
                 continue;
             if (!isdigit(s[i]) && o.find(s[i]) == std::string::npos){
