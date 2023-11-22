@@ -6,7 +6,7 @@
 /*   By: faksouss <faksouss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 09:33:57 by faksouss          #+#    #+#             */
-/*   Updated: 2023/11/22 17:34:39 by faksouss         ###   ########.fr       */
+/*   Updated: 2023/11/22 18:27:38 by faksouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,10 @@ bool valid(std::string s);
 template<typename T>
 
 T PmergeMe(int ac, char **av){
-    T cnt;
+    T cnt, tmp;
     int odd = -1;
     for (int i = 1; i < ac-(ac%2==0); i+=2){
-        std::string f(av[i]);
-        std::string s(av[i+1]);
+        std::string f(av[i]), s(av[i+1]);
         if(!valid(f))
             throw(std::runtime_error("Error : Invalid argiment [" + f + "]"));
         else if (!valid(s))
@@ -39,12 +38,13 @@ T PmergeMe(int ac, char **av){
         if (cnt[i-1] > cnt[i])
             std::swap(cnt[i-1], cnt[i]);
     }
-    if (ac%2==0 && !valid(av[ac-1])){
-        std::string s(av[ac-1]);
-        throw(std::runtime_error("Error : Invalid argiment [" + s + "]"));
-    }
-    else if (ac%2==0)
+    if (ac%2==0){
+        if(!valid(av[ac-1])){
+            std::string s(av[ac-1]);
+            throw(std::runtime_error("Error : Invalid argiment [" + s + "]"));
+        }
         odd = atoi(av[ac-1]);
+    }
     for (size_t i = 0; i < cnt.size(); i+=2){
         for (int j=i+2; j >= 2 && j < (int)cnt.size(); j-=2){
             if (cnt[j] < cnt[j-2]){
@@ -53,13 +53,10 @@ T PmergeMe(int ac, char **av){
             }
         }
     }
-    T tmp;
-    for (size_t i = 1; i < cnt.size(); i++){
+    for (size_t i = 1; i < cnt.size() && cnt.size() > 2; i++){
         tmp.push_back(cnt[i]);
         cnt.erase(cnt.begin()+i);
     }
-    if (odd != -1)
-        tmp.push_back(odd);
     int a = 0, b = 1, c = a*2+b, d = tmp.size();
     while (c < d){
         a = b;
@@ -68,5 +65,7 @@ T PmergeMe(int ac, char **av){
         for (int i = c; i >= b; i--)
             cnt.insert(std::lower_bound(cnt.begin(),cnt.end(),tmp[i-1]), tmp[i-1]);
     }
+    if (odd != -1)
+        cnt.insert(std::lower_bound(cnt.begin(),cnt.end(),odd), odd);
     return cnt;
 }
