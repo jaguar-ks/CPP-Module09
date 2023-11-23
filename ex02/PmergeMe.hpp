@@ -6,7 +6,7 @@
 /*   By: faksouss <faksouss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 09:33:57 by faksouss          #+#    #+#             */
-/*   Updated: 2023/11/22 18:27:38 by faksouss         ###   ########.fr       */
+/*   Updated: 2023/11/23 09:50:00 by faksouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,14 @@ T PmergeMe(int ac, char **av){
         tmp.push_back(cnt[i]);
         cnt.erase(cnt.begin()+i);
     }
-    int a = 0, b = 1, c = a*2+b, d = tmp.size();
+    if (!tmp.empty())
+        cnt.insert(std::lower_bound(cnt.begin(),cnt.end(),tmp[0]), tmp[0]);
+    int a = 0, b = 1, c = b+(a*2), d = tmp.size();
     while (c < d){
         a = b;
         b = c;
-        a*2+b > d? c = d : c = a*2+b;
-        for (int i = c; i >= b; i--)
+        b+(a*2) >= d? c = d : c = b+(a*2);
+        for (int i = c; i > b; i--)
             cnt.insert(std::lower_bound(cnt.begin(),cnt.end(),tmp[i-1]), tmp[i-1]);
     }
     if (odd != -1)

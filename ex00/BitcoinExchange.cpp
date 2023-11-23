@@ -6,7 +6,7 @@
 /*   By: faksouss <faksouss@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/19 03:25:33 by faksouss          #+#    #+#             */
-/*   Updated: 2023/11/20 10:04:44 by faksouss         ###   ########.fr       */
+/*   Updated: 2023/11/23 08:53:20 by faksouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ bool checkLine(std::string &line, std::string *d, std::string &v, int c){
             d[p] += f[0][i];
         }
         p=0;
-        for (size_t i = 0; i < f[1].size(); i++){
+        for (size_t i = (f[1][0]=='+'); i < f[1].size(); i++){
             p+=(f[1][i] == '.');
             if (p>1 || (!isdigit(f[1][i]) && f[1][i] != '.')){
                 std::cerr << "Error : Invalid value => " << f[1] << std::endl;
@@ -129,7 +129,7 @@ void BitcoinExchange::exchangeBitcoin( std::ifstream &input ){
         try{
             const Time t(atoi(d[0].c_str()), atoi(d[1].c_str()), atoi(d[2].c_str()));
             float val = atof(v.c_str());
-            if (val > 1000 || val < 0)
+            if (val > 1000 || val < 0 || v == ".")
                 throw std::out_of_range("Error : Out of range value");
             std::map<Time, float>::iterator it = this->dataBase.find(t);
             if (it != this->dataBase.end())
